@@ -3,6 +3,7 @@ let startT;
 let name_ = "hacker";
 let triesS = [];
 let lb = document.getElementsByName("leaderboard");
+let fastestGT = 1e10;
 const levels_ = document.getElementsByName("level");
 date.textContent = time();
 playBtn.disabled = true;
@@ -12,6 +13,8 @@ inpName.addEventListener('click',setN)
 playBtn.addEventListener('click', play)
 guessBtn.addEventListener('click', makeGuess);
 giveUp.addEventListener('click', givesUp);
+
+setInterval(setT, 1000);
 
 function setN(){
     if(nameM.value != "" && /^[A-Za-z]+$/.test(nameM.value)){
@@ -55,7 +58,13 @@ function makeGuess(){
     else{
         ++score;
         let tElapsed = performance.now() - startT;
+        fastestGT = Math.min((performance.now()-startT)/1000, fastestGT);
         msg.textContent = "Good Job "+name_+"! It took you "+tries+" tries and "+ (tElapsed/1000).toFixed(2) + " seconds.";
+        if(tries < Math.ceil(Math.log(level)/Math.log(2))-1) msg.textContent += " You did great!";
+        else if(tries < Math.ceil(Math.log(level)/Math.log(2))) msg.textContent += " You did fairly well.";
+        else if(tries == Math.ceil(Math.log(level)/Math.log(2))) msg.textContent += " You got it in "+tries+" tries, which is what was expected.";
+        else if(tries <= level) msg.textContent += " You did... absolutely horribly.";
+        else msg.textContent += " (How did you do so badly?)";
         reset();
         updateScore();
     }    
@@ -63,7 +72,7 @@ function makeGuess(){
 
 function updateScore(){
     triesS.push(tries);
-    fastest.textContent = "Fastest game"
+    fastest12.textContent = "Fastest game: " + fastestGT.toFixed(2) + "seconds"; 
     wins.textContent = "Total wins: "+score;
     triesS.sort((a,b) => a - b);
     let avg = 0;
@@ -115,4 +124,8 @@ function time() {
     else day += "th";
     let formatted = months[d.getMonth()] + " " + day + ", " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     return formatted;
+}
+
+function setT(){
+    date.textContent = time();
 }
