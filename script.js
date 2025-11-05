@@ -12,11 +12,13 @@ const levels_ = document.getElementsByName("level");
 date.textContent = time();
 playBtn.disabled = true;
 guess.disabled = true;
+binSButton.disabled = true;
 
 inpName.addEventListener('click',setN)
 playBtn.addEventListener('click', play)
 guessBtn.addEventListener('click', makeGuess);
 giveUp.addEventListener('click', givesUp);
+binSButton.addEventListener('click', binSearch)
 
 setInterval(setT, 1000);
 setInterval(playT, 1);
@@ -35,6 +37,7 @@ function setN(){
 }
 
 function play(){
+    binSButton.disabled = false;
     inGame = true;
     guess.disabled = false;
     startT = performance.now();
@@ -94,10 +97,11 @@ function updateScore(){
         }
     }
     avg /= triesS.length;
-    avgScore.textContent = "Average score: "+avg.toFixed(2)+ " seconds.";
+    avgScore.textContent = "Average score: "+avg.toFixed(2)+ " tries.";
 }
 
 function reset(){
+    binSButton.disabled = true;
     guess.disabled = true;
     playBtn.disabled = false;
     guessBtn.disabled = true;
@@ -134,8 +138,13 @@ function time() {
     else if(day%10 == 2 && day != 12) day += "nd";
     else if(day%10 == 3 && day != 13) day += "rd";
     else day += "th";
-    let formatted = months[d.getMonth()] + " " + day + ", " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    let formatted = months[d.getMonth()] + " " + day + ", " + formatT(d.getHours()) + ":" + formatT(d.getMinutes()) + ":" + formatT(d.getSeconds());
     return formatted;
+}
+
+function formatT(a){
+    if(a.toString().length == 1) return "0"+a.toString();
+    else return a;
 }
 
 function setT(){
@@ -151,4 +160,20 @@ function close(dist, lev){
     if(dist <= Math.ceil(lev/20)) return "hot";
     else if(dist <= Math.ceil(lev/3)) return "warm";
     else return "cold";
+}
+
+function binSearch(){
+    inGame = false;
+    binS.textContent = "";
+    let lB = 0, rB = level;
+    while(Math.abs(lB-rB) > 1){
+        binS.textContent += "("+lB+", "+rB+") ";
+        let guess = (parseInt(lB)+parseInt(rB))/2;
+        if(guess < ans) lB = Math.ceil(guess);
+        else rB = Math.floor(guess);
+    }
+    binS.textContent += "("+lB+", "+rB+")";
+    binS.textContent += " --> " + ans;
+    reset();
+    giveUp();
 }
