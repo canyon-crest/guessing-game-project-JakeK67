@@ -83,7 +83,7 @@ function makeGuess(){
 
 function updateScore(){
     triesS.push(tries);
-    fastest12.textContent = "Fastest game: " + fastestGT.toFixed(2) + "seconds"; 
+    fastest12.textContent = "Fastest game: " + fastestGT.toFixed(2) + " seconds"; 
     wins.textContent = "Total wins: "+score;
     triesS.sort((a,b) => a - b);
     let avg = 0;
@@ -94,7 +94,7 @@ function updateScore(){
         }
     }
     avg /= triesS.length;
-    avgScore.textContent = "Average score: "+avg.toFixed(2);
+    avgScore.textContent = "Average score: "+avg.toFixed(2)+ " seconds.";
 }
 
 function reset(){
@@ -121,7 +121,7 @@ function givesUp(){
         }
     }
     avg /= triesS.length;
-    avgScore.textContent = "Average score: "+avg.toFixed(2);
+    avgScore.textContent = "Average score: "+avg.toFixed(2) + " tries.";
     msg.textContent = "Choose a level";
     reset();
 }
