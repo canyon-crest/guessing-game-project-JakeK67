@@ -1,9 +1,13 @@
 let level, ans, score = 0, tries;
 let startT;
+let tElapsed =0;
 let name_ = "hacker";
+inGame = false;
 let triesS = [];
 let lb = document.getElementsByName("leaderboard");
 let fastestGT = 1e10;
+let TTime = 0, wonT = 0;
+let playTime = 0;
 const levels_ = document.getElementsByName("level");
 date.textContent = time();
 playBtn.disabled = true;
@@ -15,6 +19,7 @@ guessBtn.addEventListener('click', makeGuess);
 giveUp.addEventListener('click', givesUp);
 
 setInterval(setT, 1000);
+setInterval(playT, 1);
 
 function setN(){
     if(nameM.value != "" && /^[A-Za-z]+$/.test(nameM.value)){
@@ -30,6 +35,7 @@ function setN(){
 }
 
 function play(){
+    inGame = true;
     guess.disabled = false;
     startT = performance.now();
     tries = 0;
@@ -56,8 +62,11 @@ function makeGuess(){
     if(userGuess > ans) msg.textContent = userGuess+" is too high, " + name_;
     else if(userGuess < ans) msg.textContent = userGuess+" is too low, " + name_;
     else{
+        inGame = false;
         ++score;
-        let tElapsed = performance.now() - startT;
+        TTime += tElapsed/1000;
+        ++wonT;
+        avgTime.textContent = "Average time: " + (TTime/wonT).toFixed(2);
         fastestGT = Math.min((performance.now()-startT)/1000, fastestGT);
         msg.textContent = "Good Job "+name_+"! It took you "+tries+" tries and "+ (tElapsed/1000).toFixed(2) + " seconds.";
         if(tries < Math.ceil(Math.log(level)/Math.log(2))-1) msg.textContent += " You did great!";
@@ -67,7 +76,9 @@ function makeGuess(){
         else msg.textContent += " (How did you do so badly?)";
         reset();
         updateScore();
-    }    
+        return;
+    }
+    msg.textContent += ". Your answer is " + close(Math.abs(ans-userGuess), level)
 }
 
 function updateScore(){
@@ -98,6 +109,7 @@ function reset(){
 }
 
 function givesUp(){
+    inGame = false;
     triesS.push(parseInt(level));
     wins.textContent = "Total wins: "+score;
     triesS.sort((a,b) => a - b);
@@ -128,4 +140,15 @@ function time() {
 
 function setT(){
     date.textContent = time();
+}
+
+function playT(){
+    tElapsed = performance.now() - startT;
+    if(inGame) timerR.textContent = (tElapsed/1000).toFixed(2);
+}
+
+function close(dist, lev){
+    if(dist <= Math.ceil(lev/20)) return "hot";
+    else if(dist <= Math.ceil(lev/3)) return "warm";
+    else return "cold";
 }
