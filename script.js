@@ -42,6 +42,7 @@ setInterval(setT, 1000);
 setInterval(playT, 1);
 
 function setN() {
+    resetAll.style.display = "initial";
     if (nameM.value != "" && /^[A-Za-z]+$/.test(nameM.value)) {
         name_ = nameM.value[0].toUpperCase() + nameM.value.slice(1).toLowerCase();
     } else {
@@ -56,6 +57,7 @@ function setN() {
 }
 
 function play() {
+    binS.textContent = "";
     binSButton.disabled = false;
     inGame = true;
     guess.disabled = false;
@@ -241,7 +243,7 @@ function resetEverything() {
     giveUp.disabled = true;
     inpName.disabled = false;
     nameM.disabled = false;
-    resetAll.style.display = "none"; // hide reset button until game starts
+    resetAll.style.display = "none";
 
     for (let i = 0; i < levels_.length; i++) {
         levels_[i].checked = false;
