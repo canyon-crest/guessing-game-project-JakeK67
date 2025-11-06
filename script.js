@@ -29,6 +29,7 @@ if (saved) {
     playBtn.disabled = false;
     inpName.disabled = true;
     nameM.disabled = true;
+    resetAll.style.display = "initial";
 }
 
 inpName.addEventListener('click', setN);
@@ -144,7 +145,7 @@ function reset() {
 
 function givesUp() {
     inGame = false;
-    if (typeof level === "number") triesS.push(level);
+    if (typeof level === "number") tries = level;
 
     msg.textContent = "Choose a level";
     reset();
@@ -203,4 +204,49 @@ function saveTC() {
     localStorage.setItem("stats", JSON.stringify({
         score, triesS, fastestGT, TTime, wonT, name_
     }));
+}
+
+function resetEverything() {
+    level = 0;
+    ans = 0;
+    score = 0;
+    tries = 0;
+    startT = 0;
+    tElapsed = 0;
+    name_ = "hacker";
+    inGame = false;
+    triesS = [];
+    fastestGT = 1e10;
+    TTime = 0;
+    wonT = 0;
+    playTime = 0;
+
+    nameM.value = "";
+    guess.value = "";
+    msg.textContent = "Enter your name to start.";
+    timerR.textContent = "0.00";
+    binS.textContent = "";
+    fastest12.textContent = "Fastest game: N/A";
+    wins.textContent = "Total wins: 0";
+    avgScore.textContent = "Average score: N/A";
+    avgTime.textContent = "Average time: N/A";
+    for (let i = 0; i < lb.length; i++) {
+        lb[i].textContent = "N/A";
+    }
+
+    playBtn.disabled = true;
+    guess.disabled = true;
+    binSButton.disabled = true;
+    guessBtn.disabled = true;
+    giveUp.disabled = true;
+    inpName.disabled = false;
+    nameM.disabled = false;
+    resetAll.style.display = "none"; // hide reset button until game starts
+
+    for (let i = 0; i < levels_.length; i++) {
+        levels_[i].checked = false;
+        levels_[i].disabled = false;
+    }
+
+    localStorage.removeItem("stats");
 }
