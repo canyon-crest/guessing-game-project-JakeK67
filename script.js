@@ -126,7 +126,7 @@ function updateScore() {
 
     if (wonT > 0) avgTime.textContent = "Average time: " + (TTime / wonT).toFixed(2) + " seconds";
     else avgTime.textContent = "Average time: N/A";
-
+    
     saveTC();
 }
 
@@ -194,7 +194,9 @@ function binSearch() {
     }
     binS.textContent += "(" + lB + ", " + rB + ")";
     binS.textContent += " --> " + ans;
+    tries = level;
     reset();
+    updateScore();
 }
 
 function saveTC() {
